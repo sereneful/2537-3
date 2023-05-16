@@ -1,9 +1,11 @@
+// Global variables.
 const PAGE_SIZE = 10
 let currentPage = 1;
 let pokemons = []
-let numPages = 1; // Declare numPages outside event listener
-let filteredPokemons = []; // Declare filteredPokemons outside event listener
+let numPages = 1;
+let filteredPokemons = [];
 
+// Function that updates pagination.
 const updatePaginationDiv = (currentPage, numPages) => {
     $('#pagination').empty();
   
@@ -49,6 +51,7 @@ const updatePaginationDiv = (currentPage, numPages) => {
     }
   };
 
+  // Function that displays number of pokemon.
   const displayPokemonCount = () => {
     const filteredCount = filteredPokemons.length;
     const totalCount = filteredCount > 0 ? filteredCount : pokemons.length;
@@ -61,9 +64,10 @@ const updatePaginationDiv = (currentPage, numPages) => {
       displayCount = filteredCount;
     }
   
-    $('#pokemonCount').text(`Displaying ${start}-${end} of ${displayCount} Pokémon cards.`);
+    $('#pokemonCount').text(`Displaying 10 Pokemon ${start}-${end} of ${displayCount} Pokémon cards.`);
   };
   
+  //Function for pagination.
   const paginate = async (currentPage, PAGE_SIZE, selectedPokemons) => {
     const start = (currentPage - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
@@ -73,11 +77,11 @@ const updatePaginationDiv = (currentPage, numPages) => {
     $('#pokeCards').empty();
   
     const totalCards = selected_pokemons.length;
-    const numRows = Math.ceil(totalCards / 5); // Calculate the number of rows needed
-    const numCols = Math.ceil(totalCards / numRows); // Calculate the number of columns needed
+    const numRows = Math.ceil(totalCards / 5);
+    const numCols = Math.ceil(totalCards / numRows);
   
     for (let i = 0; i < numRows; i++) {
-      const row = $('<div class="row">'); // Create a new row
+      const row = $('<div class="row">');
   
       for (let j = 0; j < numCols; j++) {
         const cardIndex = i * numCols + j;
@@ -108,18 +112,11 @@ const updatePaginationDiv = (currentPage, numPages) => {
   
     displayPokemonCount();
   };
-  
-  
 
-  
-  
-  
-  
-  
-
+  //Function to filter the pokemon.
   const filterPokemons = async (selectedTypes) => {
     if (selectedTypes.length === 0) {
-      filteredPokemons = pokemons; // Update the global variable instead of declaring a new local variable
+      filteredPokemons = pokemons;
     } else {
       filteredPokemons = [];
       for (const pokemon of pokemons) {
@@ -141,32 +138,27 @@ const updatePaginationDiv = (currentPage, numPages) => {
     displayPokemonCount();
   };
 
+  // Setup function when page is loaded.
 const setup = async () => {
-  // test out poke api using axios here
-
 
   $('#pokeCards').empty()
   let response = await axios.get('https://pokeapi.co/api/v2/pokemon?offset=0&limit=810');
   pokemons = response.data.results;
 
-  const totalCount = response.data.count; // Get the total count of Pokémon
-  $('#totalPokemonCount').text(`Total Pokémon: ${totalCount}`); // Display the total count on the page
-
+  const totalCount = response.data.count;
+  $('#totalPokemonCount').text(`Total Pokémon: ${totalCount}`);
 
   $('#typeFilter').on('change', function () {
     const selectedType = $(this).val();
     const selectedTypes = selectedType ? [selectedType] : [];
     filterPokemons(selectedTypes);
-    displayPokemonCount(); // Update the Pokémon count
+    displayPokemonCount();
   });
-
 
   paginate(currentPage, PAGE_SIZE, pokemons)
   const numPages = Math.ceil(pokemons.length / PAGE_SIZE)
   updatePaginationDiv(currentPage, numPages)
 
-  // pop up modal when clicking on a pokemon card
-  // add event listener to each pokemon card
   $('body').on('click', '.pokeCard', async function (e) {
     const pokemonName = $(this).attr('pokeName')
     // console.log("pokemonName: ", pokemonName);
@@ -208,7 +200,7 @@ const setup = async () => {
   const filterContainer = document.getElementById('filterContainer');
   filterContainer.innerHTML = generateCheckboxes(pokemonTypes);
 
-  // Add event listener to checkboxes
+
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', () => {
@@ -216,7 +208,7 @@ const setup = async () => {
         .filter((checkbox) => checkbox.checked)
         .map((checkbox) => checkbox.value);
       filterPokemons(selectedTypes);
-      displayPokemonCount(); // Update the Pokémon count
+      displayPokemonCount();
     });
   });
 
@@ -224,22 +216,20 @@ const setup = async () => {
     currentPage = Number(e.target.value);
     const selectedType = $('#typeFilter').val();
     const selectedTypes = selectedType ? [selectedType] : [];
-    await filterPokemons(selectedTypes); // Wait for filterPokemons to complete
-  
-    // Update the numPages variable with the correct value
+    await filterPokemons(selectedTypes);
+
     numPages = Math.ceil(filteredPokemons.length / PAGE_SIZE);
   
-    // Empty the #pokeCards container before paginating
     $('#pokeCards').empty();
   
     paginate(currentPage, PAGE_SIZE, filteredPokemons);
     updatePaginationDiv(currentPage, numPages);
-    displayPokemonCount(); // Update the Pokémon count
+    displayPokemonCount();
   });
-  
 
 }
 
+// Function for displaying pokemon types as checkbox
 const pokemonTypes = [
     { value: 'normal', label: 'Normal' },
     { value: 'fighting', label: 'Fighting' },
@@ -270,12 +260,11 @@ const pokemonTypes = [
     `;
   };
 
+// Generates Checkboxes.
 const generateCheckboxes = (types) => {
   const checkboxes = types.map((type) => generateCheckbox(type)).join('');
   return `<div class="checkbox-container">${checkboxes}</div>`;
 };
 
-  
-
-
+// Sets up document when loaded.
 $(document).ready(setup)
