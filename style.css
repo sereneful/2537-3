@@ -1,23 +1,59 @@
 #pokeCards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pokeCard {
+  width: 220px;
+  height: 220px;
+  margin: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 400px) {
   .pokeCard {
-    width: 200px;
-    height: 200px;
-    margin: 10px;
-    border: 1px solid black;
-    border-radius: 10px;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    width: calc(100% - 20px);
   }
-  
-  .modal img {
-    width: 100%;
-    height: 100%;
-  }
+}
+
+.pokeContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+}
+
+.modal img {
+  width: 100%;
+  height: 100%;
+}
+
+#filterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+
+#pokemonCount {
+  font-size: 18px;
+  margin: 10px;
+  padding: 
+}
